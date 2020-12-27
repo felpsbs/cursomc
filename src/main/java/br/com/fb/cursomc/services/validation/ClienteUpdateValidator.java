@@ -2,45 +2,45 @@ package br.com.fb.cursomc.services.validation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.HandlerMapping;
 
 import br.com.fb.cursomc.domain.Cliente;
-import br.com.fb.cursomc.domain.enums.TipoCliente;
-import br.com.fb.cursomc.dto.ClienteNewDTO;
+import br.com.fb.cursomc.dto.ClienteDTO;
 import br.com.fb.cursomc.repositories.ClienteRepository;
 import br.com.fb.cursomc.resources.exceptions.FieldMessage;
-import br.com.fb.cursomc.services.validation.utils.BR;
 
-public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO> {
+public class ClienteUpdateValidator implements ConstraintValidator<ClienteUpdate, ClienteDTO> {
+	
+	@Autowired
+	private HttpServletRequest request;
 	
 	@Autowired
 	private ClienteRepository rep;
 	
 	@Override
-	public void initialize(ClienteInsert ann) {
+	public void initialize(ClienteUpdate ann) {
 	}
 
 	@Override
-	public boolean isValid(ClienteNewDTO objDto, ConstraintValidatorContext context) {
+	public boolean isValid(ClienteDTO objDto, ConstraintValidatorContext context) {
+		
+		@SuppressWarnings("unchecked")
+		Map<String, String> map = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+		Integer uriId = Integer.parseInt(map.get("id"));
+		
+		
 		List<FieldMessage> list = new ArrayList<>();
-
-		// Validação de CPF
-		if(objDto.getTipo().equals(TipoCliente.PESSOA_FISICA.getCod()) && !BR.isValidCPF(objDto.getCpfOuCnpj())) {
-			list.add(new FieldMessage("cpfOuCnpj", "CPF inválido"));
-		}
-
-		// Validação de CNPJ
-		if(objDto.getTipo().equals(TipoCliente.PESSOA_JURIDICA.getCod()) && !BR.isValidCNPJ(objDto.getCpfOuCnpj())) {
-			list.add(new FieldMessage("cpfOuCnpj", "CNPJ inválido"));
-		}
 		
 		// Validação de Email
 		Cliente aux = rep.findByEmail(objDto.getEmail());
-		if(aux != null) {
+		if(aux != null && !aux.getId().equals(uriId)) {
 			list.add(new FieldMessage("email", "Email já existente"));
 		}
 		
