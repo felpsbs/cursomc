@@ -31,7 +31,7 @@ public class ProdutoResource {
 
 	// Paginação
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Page<ProdutoDTO>> findAll(@RequestParam(value = "page", defaultValue = "0") Integer page,
+	public ResponseEntity<Page<ProdutoDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "nome", defaultValue = "") String nome,
 			@RequestParam(value = "categorias", defaultValue = "") String categorias,
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
