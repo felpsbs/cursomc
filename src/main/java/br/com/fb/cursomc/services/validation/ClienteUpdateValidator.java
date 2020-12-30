@@ -35,7 +35,6 @@ public class ClienteUpdateValidator implements ConstraintValidator<ClienteUpdate
 		Map<String, String> map = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 		Integer uriId = Integer.parseInt(map.get("id"));
 		
-		
 		List<FieldMessage> list = new ArrayList<>();
 		
 		// Validação de Email
