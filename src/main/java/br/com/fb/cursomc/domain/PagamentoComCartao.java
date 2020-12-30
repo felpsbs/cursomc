@@ -2,9 +2,12 @@ package br.com.fb.cursomc.domain;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import br.com.fb.cursomc.domain.enums.EstadoPagamento;
 
 @Entity // nas subclasses basta coloca o @Entity
+@JsonTypeName("pagamentoComCartao")
 public class PagamentoComCartao extends Pagamento {
 
 	private static final long serialVersionUID = 1L;

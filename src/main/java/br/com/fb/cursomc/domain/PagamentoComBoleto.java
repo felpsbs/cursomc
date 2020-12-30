@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import br.com.fb.cursomc.domain.enums.EstadoPagamento;
 
 @Entity // nas subclasses basta coloca o @Entity
+@JsonTypeName("pagamentoComBoleto")
 public class PagamentoComBoleto extends Pagamento {
 
 	private static final long serialVersionUID = 1L;
