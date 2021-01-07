@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fb.cursomc.domain.ItemPedido;
 import br.com.fb.cursomc.domain.PagamentoComBoleto;
@@ -28,6 +29,9 @@ public class PedidoService {
 	private ItemPedidoRepository itemPedidoRep;
 	
 	@Autowired
+	private ClienteService clienteService;
+	
+	@Autowired
 	private BoletoService boletoService;
 	
 	@Autowired
@@ -39,9 +43,11 @@ public class PedidoService {
 				"Objeto não encontrado! ID: " + id +", Tipo: " + Pedido.class.getName()));
 	}
 
+	@Transactional
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);
 		obj.setInstante(LocalDateTime.now());
+		obj.setCliente(clienteService.find(obj.getCliente().getId())); // para imprimir o cliente
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
 		
@@ -57,11 +63,13 @@ public class PedidoService {
 		// salvando os itens de pedido
 		for (ItemPedido ip : obj.getItens()) {
 			ip.setDesconto(0.0);
-			ip.setPreco(produtoService.find(ip.getProduto().getId()).getPreco());
+			ip.setProduto(produtoService.find(ip.getProduto().getId())); // para imprimir o produto
+			ip.setPreco(ip.getProduto().getPreco());
 			ip.setPedido(obj);
 		}
 		
 		itemPedidoRep.saveAll(obj.getItens());
+		System.out.println(obj);
 		return obj;
 	}
 	
