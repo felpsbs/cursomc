@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.fb.cursomc.services.exceptions.AuthorizationException;
 import br.com.fb.cursomc.services.exceptions.DataIntegrityException;
 import br.com.fb.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -32,5 +33,12 @@ public class ResourceExceptionHandler {
 		e.getBindingResult().getFieldErrors().forEach(obj -> err.addError(obj.getField(), obj.getDefaultMessage()));
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
+	
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<StandardError> authorizationException(AuthorizationException e, HttpServletRequest request) {
+		StandardError err = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	}
+	
 	
 }
