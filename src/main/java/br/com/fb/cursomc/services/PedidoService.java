@@ -4,9 +4,13 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.fb.cursomc.domain.Cliente;
 import br.com.fb.cursomc.domain.ItemPedido;
 import br.com.fb.cursomc.domain.PagamentoComBoleto;
 import br.com.fb.cursomc.domain.Pedido;
@@ -14,6 +18,8 @@ import br.com.fb.cursomc.domain.enums.EstadoPagamento;
 import br.com.fb.cursomc.repositories.ItemPedidoRepository;
 import br.com.fb.cursomc.repositories.PagamentoRepository;
 import br.com.fb.cursomc.repositories.PedidoRepository;
+import br.com.fb.cursomc.security.UserSS;
+import br.com.fb.cursomc.services.exceptions.AuthorizationException;
 import br.com.fb.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -74,6 +80,17 @@ public class PedidoService {
 		itemPedidoRep.saveAll(obj.getItens());
 		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
+	}
+	
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		UserSS user = UserService.authenticated();
+		if(user == null) { // quer dizer que não está autenticado
+			throw new AuthorizationException("Acesso negado");
+		}
+		
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Cliente cliente = clienteService.find(user.getId());
+		return rep.findByCliente(cliente, pageRequest);
 	}
 	
 }
