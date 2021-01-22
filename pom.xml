@@ -79,6 +79,12 @@
 			<version>0.7.0</version>
 		</dependency>
 
+		<!-- Para o RandomStringUtils -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
