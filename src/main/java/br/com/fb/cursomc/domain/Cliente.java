@@ -47,7 +47,7 @@ public class Cliente implements Serializable {
 	@ElementCollection // pois essa é uma entidade fraca
 	@CollectionTable(name = "TELEFONE") // nome da table
 	private Set<String> telefones = new HashSet<>();
-	
+
 	@ElementCollection(fetch = FetchType.EAGER) // para que os perfis venham juntos com o cliente
 	@CollectionTable(name = "PERFIS") // nome da table
 	private Set<Integer> perfis = new HashSet<>();
@@ -55,6 +55,8 @@ public class Cliente implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
+
+	private String imageUrl;
 
 	public Cliente() {
 		// por padrão todo usuário do sistema será um cliente
@@ -135,11 +137,11 @@ public class Cliente implements Serializable {
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
 	}
-	
+
 	public Set<Perfil> getPerfis() {
 		return perfis.stream().map(perfil -> Perfil.toEnum(perfil)).collect(Collectors.toSet());
 	}
-	
+
 	public void addPerfil(Perfil perfil) {
 		perfis.add(perfil.getCod());
 	}
@@ -150,6 +152,14 @@ public class Cliente implements Serializable {
 
 	public void setPedidos(List<Pedido> pedidos) {
 		this.pedidos = pedidos;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	@Override
