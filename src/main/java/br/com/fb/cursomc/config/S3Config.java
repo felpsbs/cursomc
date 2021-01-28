@@ -32,8 +32,6 @@ public class S3Config {
 				.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(ENDPOINT, Regions.SA_EAST_1.getName()))// Somente para o Ninja S3
 				.withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
 	
-		
 		return amazonS3;
-		
 	}
 }

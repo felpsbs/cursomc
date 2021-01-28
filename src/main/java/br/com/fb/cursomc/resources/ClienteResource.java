@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.fb.cursomc.domain.Cliente;
@@ -42,8 +43,7 @@ public class ClienteResource {
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).build();
-		
+		return ResponseEntity.created(uri).build();	
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -80,4 +80,11 @@ public class ClienteResource {
 		Page<ClienteDTO> listDto = list.map(obj-> new ClienteDTO(obj));
 		return ResponseEntity.ok().body(listDto);
 	}
+	
+	@RequestMapping(value = "/picture", method = RequestMethod.POST)
+	public ResponseEntity<Void> uploadProfilePicture(@RequestParam("file") MultipartFile multipartFile) {
+		URI uri = service.uploadProfilePicture(multipartFile);
+		return ResponseEntity.created(uri).build();	
+	}
+	
 }

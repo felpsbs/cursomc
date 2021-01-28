@@ -1,5 +1,6 @@
 package br.com.fb.cursomc.services;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.fb.cursomc.domain.Cidade;
 import br.com.fb.cursomc.domain.Cliente;
@@ -38,6 +40,9 @@ public class ClienteService {
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+	
+	@Autowired
+	private S3Service s3Service;
 	
 	public Cliente find(Integer id) {
 		// Para restrição de cliente
@@ -99,6 +104,10 @@ public class ClienteService {
 		tels.forEach(t -> { if(t != null) cliente.getTelefones().add(t); });
 				
 		return cliente;
+	}
+	
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		return s3Service.uploadFile(multipartFile);
 	}
 	
 	private void updateData(Cliente newObj, Cliente obj) {
