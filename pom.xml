@@ -91,6 +91,7 @@
 			<version>LATEST</version>
 		</dependency>
 		
+		<!-- Para extrair informações de arquivos -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
